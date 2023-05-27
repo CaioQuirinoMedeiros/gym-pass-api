@@ -5,6 +5,7 @@ export class AppError extends Error {
     statusCode = 500,
     message
   }: {
+    name?: string
     statusCode?: number
     message: string
   }) {

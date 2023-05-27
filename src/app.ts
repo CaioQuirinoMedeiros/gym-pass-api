@@ -16,6 +16,7 @@ app.setErrorHandler((error, _request, reply) => {
     })
   } else if (error instanceof AppError) {
     reply.status(error.statusCode).send({
+      name: error.constructor?.name,
       message: error.message
     })
   } else {

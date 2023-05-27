@@ -1,5 +1,6 @@
 import { AppError } from '@/errors/AppError'
 import { UsersRepository } from '@/repositories/users-repository'
+import { User } from '@prisma/client'
 import bcrypt from 'bcrypt'
 
 interface RegisterServiceParams {
@@ -8,10 +9,16 @@ interface RegisterServiceParams {
   password: string
 }
 
+interface RegisterServiceReturn {
+  user: User
+}
+
 export class RegisterService {
   constructor(private usersRepository: UsersRepository) {}
 
-  async execute(params: RegisterServiceParams) {
+  async execute(
+    params: RegisterServiceParams
+  ): Promise<RegisterServiceReturn> {
     const { email, name, password } = params
 
     const userWithSameEmail = await this.usersRepository.findByEmail(email)
@@ -22,10 +29,12 @@ export class RegisterService {
 
     const passwordHash = await bcrypt.hash(password, 6)
 
-    await this.usersRepository.create({
+    const user = await this.usersRepository.create({
       name: name,
       email: email,
       password_hash: passwordHash
     })
+
+    return { user }
   }
 }
