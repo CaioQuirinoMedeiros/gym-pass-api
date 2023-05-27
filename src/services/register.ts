@@ -1,3 +1,4 @@
+import { AppError } from '@/errors/AppError'
 import { UsersRepository } from '@/repositories/users-repository'
 import bcrypt from 'bcrypt'
 
@@ -16,7 +17,7 @@ export class RegisterService {
     const userWithSameEmail = await this.usersRepository.findByEmail(email)
 
     if (userWithSameEmail) {
-      throw new Error('Email already exists')
+      throw new AppError({ statusCode: 409, message: 'Email already exists' })
     }
 
     const passwordHash = await bcrypt.hash(password, 6)
