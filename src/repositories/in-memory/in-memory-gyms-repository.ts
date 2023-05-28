@@ -3,9 +3,11 @@ import {
   Gym,
   GymCreateInput,
   GymFindByIdInput,
+  GymFindManyNearbyInput,
   GymSearchManyInput,
   GymsRepository
 } from '../gyms-repository'
+import { getDistanceInKmBetweenCoordinates } from '@/utils/getDistanceInKmBetweenCoordinates'
 
 export class InMemoryGymsRepository implements GymsRepository {
   public gyms: Gym[] = []
@@ -43,6 +45,18 @@ export class InMemoryGymsRepository implements GymsRepository {
 
     return this.gyms.slice(startIndex, endIndex).filter((gym) => {
       return gym.title.toLowerCase().includes(query?.toLowerCase())
+    })
+  }
+
+  async findManyNearby(input: GymFindManyNearbyInput): Promise<Gym[]> {
+    const { latitude, longitude, maxDistanceInKm } = input
+
+    return this.gyms.filter((gym) => {
+      const distanceInKm = getDistanceInKmBetweenCoordinates({
+        from: { latitude: latitude, longitude: longitude },
+        to: { latitude: gym.latitude, longitude: gym.longitude }
+      })
+      return distanceInKm <= maxDistanceInKm
     })
   }
 }
