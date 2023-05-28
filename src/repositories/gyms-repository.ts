@@ -1,12 +1,3 @@
-export type GymCreateData = {
-  id?: string
-  title: string
-  description: string | undefined | null
-  phone: string | undefined | null
-  latitude: number
-  longitude: number
-}
-
 export type Gym = {
   id: string
   title: string
@@ -16,7 +7,27 @@ export type Gym = {
   longitude: number
 }
 
+export type GymCreateInput = {
+  id?: string
+  title: string
+  description: string | undefined | null
+  phone: string | undefined | null
+  latitude: number
+  longitude: number
+}
+
+export type GymFindByIdInput = {
+  gymId: string
+}
+
+export type GymSearchManyInput = {
+  query: string
+  page: number
+  size?: number
+}
+
 export interface GymsRepository {
-  findById(gymId: string): Promise<Gym | null>
-  create(data: GymCreateData): Promise<Gym>
+  findById(input: GymFindByIdInput): Promise<Gym | null>
+  create(input: GymCreateInput): Promise<Gym>
+  searchMany(input: GymSearchManyInput): Promise<Gym[]>
 }

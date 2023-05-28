@@ -28,7 +28,7 @@ export class CheckInService {
   async execute(params: CheckInServiceParams): Promise<CheckInServiceReturn> {
     const { gymId, userId, userLatitude, userLongitude } = params
 
-    const gym = await this.gymsRepository.findById(gymId)
+    const gym = await this.gymsRepository.findById({ gymId: gymId })
 
     if (!gym) {
       throw new ResourceNotFoundError()
@@ -45,10 +45,10 @@ export class CheckInService {
       throw new MaxDistanceError()
     }
 
-    const checkInOnSameDate = await this.checkInsRepository.findByUserIdOnDate(
-      userId,
-      new Date()
-    )
+    const checkInOnSameDate = await this.checkInsRepository.findByUserIdOnDate({
+      userId: userId,
+      date: new Date()
+    })
 
     if (checkInOnSameDate) {
       throw new MaxNumberOfCheckInsError()
