@@ -1,3 +1,4 @@
+import { endOfDay, startOfDay } from 'date-fns'
 import {
   CheckIn,
   CheckInCreateInput,
@@ -12,10 +13,7 @@ import { prisma } from '@/lib/prisma'
 
 export class PrismaCheckInsRepository implements CheckInsRepository {
   async create(input: CheckInCreateInput): Promise<CheckIn> {
-    const checkIn = await prisma.checkIn.create({
-      data: { gym_id: input.gym_id, user_id: input.user_id }
-    })
-
+    const checkIn = await prisma.checkIn.create({ data: input })
     return checkIn
   }
 
@@ -42,10 +40,13 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
     const { date, userId } = input
 
     const checkInOnSameDate = await prisma.checkIn.findFirst({
-      where: { user_id: userId }
+      where: {
+        user_id: userId,
+        created_at: { gte: startOfDay(date), lte: endOfDay(date) }
+      }
     })
 
-    return checkInOnSameDate || null
+    return checkInOnSameDate
   }
 
   async findManyByUserId(
@@ -59,7 +60,7 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
       take: size
     })
 
-    return checkInOnSameDate || null
+    return checkInOnSameDate
   }
 
   async countByUserId(input: CheckInCountByUserIdInput): Promise<number> {
