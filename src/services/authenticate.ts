@@ -1,4 +1,3 @@
-import { AppError } from '@/errors/AppError'
 import { InvalidCredentialsError } from '@/errors/InvalidCredentialsError'
 import { UsersRepository } from '@/repositories/users-repository'
 import { User } from '@prisma/client'

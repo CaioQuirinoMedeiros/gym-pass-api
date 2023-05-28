@@ -1,21 +1,16 @@
-import { UsersRepository } from '../users-repository'
-
-type User = {
-  id: string
-  name: string
-  email: string
-  password_hash: string
-  created_at: Date
-}
-
-type UserCreateInput = {
-  name: string
-  email: string
-  password_hash: string
-}
+import { randomUUID } from 'node:crypto'
+import { User, UserCreateData, UsersRepository } from '../users-repository'
 
 export class InMemoryUsersRepository implements UsersRepository {
   public users: User[] = []
+
+  async findById(userId: string) {
+    const user = this.users.find((user) => {
+      return user.id === userId
+    })
+
+    return user || null
+  }
 
   async findByEmail(email: string): Promise<User | null> {
     const user = this.users.find((user) => {
@@ -25,9 +20,9 @@ export class InMemoryUsersRepository implements UsersRepository {
     return user || null
   }
 
-  async create(data: UserCreateInput): Promise<User> {
+  async create(data: UserCreateData): Promise<User> {
     const user: User = {
-      id: 'user-1',
+      id: randomUUID(),
       name: data.name,
       email: data.email,
       password_hash: data.password_hash,
