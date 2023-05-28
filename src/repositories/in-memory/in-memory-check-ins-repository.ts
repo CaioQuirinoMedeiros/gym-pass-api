@@ -5,24 +5,47 @@ import {
   CheckInsRepository,
   CheckInFindByUserOnDateInput,
   CheckInFindManyByUserInput,
-  CheckInCountByUserIdInput
+  CheckInCountByUserIdInput,
+  CheckInFindByIdInput,
+  CheckInSaveInput
 } from '../check-ins-repository'
 import { isSameDay } from 'date-fns'
 
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public checkIns: CheckIn[] = []
 
-  async create(data: CheckInCreateInput): Promise<CheckIn> {
+  async create(input: CheckInCreateInput): Promise<CheckIn> {
     const checkIn: CheckIn = {
-      id: data.id ?? randomUUID(),
-      gym_id: data.gym_id,
-      user_id: data.user_id,
+      id: input.id ?? randomUUID(),
+      gym_id: input.gym_id,
+      user_id: input.user_id,
       created_at: new Date(),
-      validated_at: data.validated_at ? new Date(data.validated_at) : null
+      validated_at: input.validated_at ? new Date(input.validated_at) : null
     }
 
     this.checkIns.push(checkIn)
     return checkIn
+  }
+
+  async save(input: CheckInSaveInput): Promise<CheckIn> {
+    const checkInIndex = this.checkIns.findIndex((checkIn) => {
+      return checkIn.id === checkIn.id
+    })
+
+    if (checkInIndex !== -1) {
+      this.checkIns[checkInIndex] = input.checkIn
+    }
+
+    return input.checkIn
+  }
+
+  async findById(input: CheckInFindByIdInput): Promise<CheckIn | null> {
+    const { checkInId } = input
+
+    const checkIn = this.checkIns.find((checkIn) => {
+      return checkIn.id === checkInId
+    })
+    return checkIn || null
   }
 
   async findByUserIdOnDate(
@@ -35,7 +58,6 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
       const isUserCheckIn = checkIn.user_id === userId
       return isUserCheckIn && isOnSameDate
     })
-
     return checkInOnSameDate || null
   }
 

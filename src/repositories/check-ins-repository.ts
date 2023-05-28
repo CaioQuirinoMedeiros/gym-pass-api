@@ -14,6 +14,14 @@ export type CheckInCreateInput = {
   gym_id: string
 }
 
+export type CheckInSaveInput = {
+  checkIn: CheckIn
+}
+
+export type CheckInFindByIdInput = {
+  checkInId: string
+}
+
 export type CheckInFindByUserOnDateInput = {
   userId: string
   date: Date
@@ -31,6 +39,8 @@ export type CheckInCountByUserIdInput = {
 
 export interface CheckInsRepository {
   create(data: CheckInCreateInput): Promise<CheckIn>
+  save(data: CheckInSaveInput): Promise<CheckIn>
+  findById(input: CheckInFindByIdInput): Promise<CheckIn | null>
   findByUserIdOnDate(input: CheckInFindByUserOnDateInput): Promise<CheckIn | null>
   findManyByUserId(input: CheckInFindManyByUserInput): Promise<CheckIn[]>
   countByUserId(input: CheckInCountByUserIdInput): Promise<number>

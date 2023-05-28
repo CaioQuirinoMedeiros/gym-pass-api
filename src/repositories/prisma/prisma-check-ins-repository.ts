@@ -4,17 +4,36 @@ import {
   CheckInsRepository,
   CheckInFindByUserOnDateInput,
   CheckInFindManyByUserInput,
-  CheckInCountByUserIdInput
+  CheckInCountByUserIdInput,
+  CheckInFindByIdInput,
+  CheckInSaveInput
 } from '../check-ins-repository'
 import { prisma } from '@/lib/prisma'
 
 export class PrismaCheckInsRepository implements CheckInsRepository {
-  async create(data: CheckInCreateInput): Promise<CheckIn> {
+  async create(input: CheckInCreateInput): Promise<CheckIn> {
     const checkIn = await prisma.checkIn.create({
-      data: { gym_id: data.gym_id, user_id: data.user_id }
+      data: { gym_id: input.gym_id, user_id: input.user_id }
     })
 
     return checkIn
+  }
+
+  async save(input: CheckInSaveInput): Promise<CheckIn> {
+    const checkIn = await prisma.checkIn.update({
+      where: { id: input.checkIn.id },
+      data: input.checkIn
+    })
+
+    return checkIn
+  }
+
+  async findById(input: CheckInFindByIdInput): Promise<CheckIn | null> {
+    const { checkInId } = input
+
+    return prisma.checkIn.findUnique({
+      where: { id: checkInId }
+    })
   }
 
   async findByUserIdOnDate(
