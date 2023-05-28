@@ -1,15 +1,20 @@
-import { expect, describe, it } from 'vitest'
+import { expect, describe, it, beforeEach } from 'vitest'
 import { RegisterService } from './register'
 import bcrypt from 'bcrypt'
 import { InMemoryUsersRepository } from '@/repositories/in-memory/in-memory-users-repository'
 import { AppError } from '@/errors/AppError'
 
-describe('RegisterService', () => {
-  it('should be able to register', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterService(usersRepository)
+let usersRepository = new InMemoryUsersRepository()
+let sut = new RegisterService(usersRepository)
 
-    const { user } = await registerService.execute({
+describe('RegisterService', () => {
+  beforeEach(() => {
+    usersRepository = new InMemoryUsersRepository()
+    sut = new RegisterService(usersRepository)
+  })
+
+  it('should be able to register', async () => {
+    const { user } = await sut.execute({
       name: 'John Doe',
       email: 'john@mail.com',
       password: '123456'
@@ -19,10 +24,7 @@ describe('RegisterService', () => {
   })
 
   it('should hash user password upon registration', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterService(usersRepository)
-
-    const { user } = await registerService.execute({
+    const { user } = await sut.execute({
       name: 'John Doe',
       email: 'john@mail.com',
       password: '123456'
@@ -37,19 +39,16 @@ describe('RegisterService', () => {
   })
 
   it('should not be able to register with same email twice', async () => {
-    const usersRepository = new InMemoryUsersRepository()
-    const registerService = new RegisterService(usersRepository)
-
     const email = 'john@mail.com'
 
-    await registerService.execute({
+    await sut.execute({
       name: 'John Doe1',
       email: email,
       password: '123456'
     })
 
     await expect(() => {
-      return registerService.execute({
+      return sut.execute({
         name: 'John Doe2',
         email: email,
         password: '123456'
