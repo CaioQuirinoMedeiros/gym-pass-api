@@ -9,14 +9,14 @@ let gymsRepository: InMemoryGymsRepository
 let sut: CheckInService
 
 describe('CheckInService', () => {
-  beforeEach(() => {
+  beforeEach(async () => {
     vi.useFakeTimers()
 
     checkInsRepository = new InMemoryCheckInsRepository()
     gymsRepository = new InMemoryGymsRepository()
     sut = new CheckInService(checkInsRepository, gymsRepository)
 
-    gymsRepository.gyms.push({
+    await gymsRepository.create({
       id: 'gym-01',
       title: 'GymA',
       description: '',
@@ -82,7 +82,7 @@ describe('CheckInService', () => {
   })
 
   it('should no be able to check in on distant gym', async () => {
-    gymsRepository.gyms.push({
+    await gymsRepository.create({
       id: 'gym-02',
       title: 'GymB',
       description: '',

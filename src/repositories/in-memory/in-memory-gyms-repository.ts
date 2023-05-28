@@ -1,4 +1,5 @@
-import { Gym, GymsRepository } from '../gyms-repository'
+import { randomUUID } from 'node:crypto'
+import { Gym, GymCreateData, GymsRepository } from '../gyms-repository'
 
 export class InMemoryGymsRepository implements GymsRepository {
   public gyms: Gym[] = []
@@ -9,5 +10,20 @@ export class InMemoryGymsRepository implements GymsRepository {
     })
 
     return gym || null
+  }
+
+  async create(data: GymCreateData): Promise<Gym> {
+    const gym: Gym = {
+      id: data.id ?? randomUUID(),
+      title: data.title,
+      description: data.description ?? null,
+      latitude: data.latitude,
+      longitude: data.longitude,
+      phone: data.phone ?? null
+    }
+
+    this.gyms.push(gym)
+
+    return gym
   }
 }

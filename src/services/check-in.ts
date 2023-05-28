@@ -1,4 +1,5 @@
-import { AppError } from '@/errors/AppError'
+import { MaxDistanceError } from '@/errors/MaxDistanceError'
+import { MaxNumberOfCheckInsError } from '@/errors/MaxNumberOfCheckInsError'
 import { ResourceNotFoundError } from '@/errors/ResourceNotFoundError'
 import {
   CheckIn,
@@ -41,7 +42,7 @@ export class CheckInService {
     const MAX_DISTANCE_IN_KM = 0.1
 
     if (kmsFromUserToGym > MAX_DISTANCE_IN_KM) {
-      throw new AppError({ statusCode: 403, message: 'Too far from the gym' })
+      throw new MaxDistanceError()
     }
 
     const checkInOnSameDate = await this.checkInsRepository.findByUserIdOnDate(
@@ -50,10 +51,7 @@ export class CheckInService {
     )
 
     if (checkInOnSameDate) {
-      throw new AppError({
-        statusCode: 409,
-        message: 'Already checked in today'
-      })
+      throw new MaxNumberOfCheckInsError()
     }
 
     const checkIn = await this.checkInsRepository.create({
