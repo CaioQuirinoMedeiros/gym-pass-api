@@ -1,17 +1,18 @@
 import { randomUUID } from 'crypto'
 import {
   CheckIn,
-  CheckInCreateData,
+  CheckInCreateInput,
   CheckInsRepository,
-  FindCheckInByUserOnDateInput,
-  FindCheckInsByUserInput
+  CheckInFindByUserOnDateInput,
+  CheckInFindManyByUserInput,
+  CheckInCountByUserIdInput
 } from '../check-ins-repository'
 import { isSameDay } from 'date-fns'
 
 export class InMemoryCheckInsRepository implements CheckInsRepository {
   public checkIns: CheckIn[] = []
 
-  async create(data: CheckInCreateData): Promise<CheckIn> {
+  async create(data: CheckInCreateInput): Promise<CheckIn> {
     const checkIn: CheckIn = {
       id: data.id ?? randomUUID(),
       gym_id: data.gym_id,
@@ -25,7 +26,7 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
   }
 
   async findByUserIdOnDate(
-    input: FindCheckInByUserOnDateInput
+    input: CheckInFindByUserOnDateInput
   ): Promise<CheckIn | null> {
     const { date, userId } = input
 
@@ -38,7 +39,9 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     return checkInOnSameDate || null
   }
 
-  async findManyByUserId(input: FindCheckInsByUserInput): Promise<CheckIn[]> {
+  async findManyByUserId(
+    input: CheckInFindManyByUserInput
+  ): Promise<CheckIn[]> {
     const { page, size = 20, userId } = input
 
     const startIndex = (page - 1) * size
@@ -47,5 +50,14 @@ export class InMemoryCheckInsRepository implements CheckInsRepository {
     return this.checkIns.slice(startIndex, endIndex).filter((checkIn) => {
       return checkIn.user_id === userId
     })
+  }
+
+  async countByUserId(input: CheckInCountByUserIdInput): Promise<number> {
+    const { userId } = input
+
+    const checkIns = this.checkIns.filter((checkIn) => {
+      return checkIn.user_id === userId
+    })
+    return checkIns.length
   }
 }
