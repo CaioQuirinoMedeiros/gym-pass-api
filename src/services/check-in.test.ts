@@ -2,8 +2,10 @@ import { expect, describe, it, beforeEach, vi, afterEach } from 'vitest'
 import { CheckInService } from './check-in'
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
 import { AppError } from '@/errors/AppError'
+import { InMemoryGymsRepository } from '@/repositories/in-memory/in-memory-gyms-repository'
 
 let checkInsRepository: InMemoryCheckInsRepository
+let gymsRepository: InMemoryGymsRepository
 let sut: CheckInService
 
 describe('CheckInService', () => {
@@ -11,7 +13,17 @@ describe('CheckInService', () => {
     vi.useFakeTimers()
 
     checkInsRepository = new InMemoryCheckInsRepository()
-    sut = new CheckInService(checkInsRepository)
+    gymsRepository = new InMemoryGymsRepository()
+    sut = new CheckInService(checkInsRepository, gymsRepository)
+
+    gymsRepository.gyms.push({
+      id: 'gym-01',
+      title: 'GymA',
+      description: '',
+      latitude: 0,
+      longitude: 0,
+      phone: ''
+    })
   })
 
   afterEach(() => {
@@ -20,8 +32,10 @@ describe('CheckInService', () => {
 
   it('should be able to check in', async () => {
     const { checkIn } = await sut.execute({
-      gymId: 'gymId',
-      userId: 'userId'
+      gymId: 'gym-01',
+      userId: 'userId',
+      userLatitude: 0,
+      userLongitude: 0
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
@@ -31,14 +45,18 @@ describe('CheckInService', () => {
     vi.setSystemTime(new Date(2020, 0, 1, 10, 0, 0))
 
     await sut.execute({
-      gymId: 'gymId',
-      userId: 'userId'
+      gymId: 'gym-01',
+      userId: 'userId',
+      userLatitude: 0,
+      userLongitude: 0
     })
 
     await expect(() => {
       return sut.execute({
         gymId: 'gymId',
-        userId: 'userId'
+        userId: 'userId',
+        userLatitude: 0,
+        userLongitude: 0
       })
     }).rejects.toBeInstanceOf(AppError)
   })
@@ -46,16 +64,40 @@ describe('CheckInService', () => {
   it('should be able to check in twice in different days', async () => {
     vi.setSystemTime(new Date(2020, 0, 1, 10, 0, 0))
     await sut.execute({
-      gymId: 'gymId',
-      userId: 'userId'
+      gymId: 'gym-01',
+      userId: 'userId',
+      userLatitude: 0,
+      userLongitude: 0
     })
 
     vi.setSystemTime(new Date(2020, 0, 2, 5, 0, 0))
     const { checkIn } = await sut.execute({
-      gymId: 'gymId',
-      userId: 'userId'
+      gymId: 'gym-01',
+      userId: 'userId',
+      userLatitude: 0,
+      userLongitude: 0
     })
 
     expect(checkIn.id).toEqual(expect.any(String))
+  })
+
+  it('should no be able to check in on distant gym', async () => {
+    gymsRepository.gyms.push({
+      id: 'gym-02',
+      title: 'GymB',
+      description: '',
+      latitude: -15.8008807,
+      longitude: -47.9317159,
+      phone: ''
+    })
+
+    await expect(() => {
+      return sut.execute({
+        gymId: 'gym-02',
+        userId: 'userId',
+        userLatitude: -15.7734181,
+        userLongitude: -47.8738904
+      })
+    }).rejects.toBeInstanceOf(AppError)
   })
 })
