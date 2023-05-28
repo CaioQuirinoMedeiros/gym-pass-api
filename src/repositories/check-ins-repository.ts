@@ -16,4 +16,5 @@ export type CheckIn = {
 
 export interface CheckInsRepository {
   create(data: CheckInCreateData): Promise<CheckIn>
+  findByUserIdOnDate(userId: string, date:Date): Promise<CheckIn | null>
 }

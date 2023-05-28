@@ -1,4 +1,8 @@
-import { CheckIn, CheckInsRepository } from '@/repositories/check-ins-repository'
+import { AppError } from '@/errors/AppError'
+import {
+  CheckIn,
+  CheckInsRepository
+} from '@/repositories/check-ins-repository'
 
 interface CheckInServiceParams {
   userId: string
@@ -14,6 +18,20 @@ export class CheckInService {
 
   async execute(params: CheckInServiceParams): Promise<CheckInServiceReturn> {
     const { gymId, userId } = params
+
+    const checkInOnSameDate = await this.checkInsRepository.findByUserIdOnDate(
+      userId,
+      new Date()
+    )
+
+    console.log({ checkInOnSameDate })
+
+    if (checkInOnSameDate) {
+      throw new AppError({
+        statusCode: 409,
+        message: 'Already checked in today'
+      })
+    }
 
     const checkIn = await this.checkInsRepository.create({
       gym_id: gymId,
