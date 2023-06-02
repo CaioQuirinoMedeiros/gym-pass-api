@@ -1,21 +1,13 @@
+import { makeGetUserProfileService } from '@/services/factories/make-get-user-profile-service'
 import { FastifyReply, FastifyRequest } from 'fastify'
-import { z } from 'zod'
-import { makeAuthenticateService } from '@/services/factories/make-authenticate-service'
 
 export async function profile(request: FastifyRequest, reply: FastifyReply) {
-  const authenticateBodySchema = z.object({
-    email: z.string().email(),
-    password: z.string()
+  await request.jwtVerify()
+
+  const getUserProfileService = makeGetUserProfileService()
+  const { user } = await getUserProfileService.execute({
+    userId: request.user.sub
   })
 
-  const { email,  password } = authenticateBodySchema.parse(request.body)
-
-  const authenticateService = makeAuthenticateService()
-
-  await authenticateService.execute({
-    email: email,
-    password: password
-  })
-
-  return reply.send()
+  return reply.send({ user: { ...user, password_hash: undefined } })
 }
