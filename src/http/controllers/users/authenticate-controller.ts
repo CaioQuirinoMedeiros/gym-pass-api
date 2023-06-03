@@ -22,5 +22,5 @@ export async function authenticateController(
 
   const token = await reply.jwtSign({}, { sign: { sub: user.id } })
 
-  return reply.send({ token })
+  return reply.send({ token, userId: user.id })
 }

@@ -24,6 +24,9 @@ describe('AuthenticateController (e2e)', () => {
     })
 
     expect(response.statusCode).toBe(200)
-    expect(response.body).toEqual({ token: expect.any(String) })
+    expect(response.body).toEqual({
+      token: expect.any(String),
+      userId: expect.any(String)
+    })
   })
 })

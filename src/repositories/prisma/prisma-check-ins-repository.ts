@@ -22,16 +22,16 @@ export class PrismaCheckInsRepository implements CheckInsRepository {
       where: { id: input.checkIn.id },
       data: input.checkIn
     })
-
     return checkIn
   }
 
   async findById(input: CheckInFindByIdInput): Promise<CheckIn | null> {
     const { checkInId } = input
 
-    return prisma.checkIn.findUnique({
+    const checkIn = await prisma.checkIn.findUnique({
       where: { id: checkInId }
     })
+    return checkIn
   }
 
   async findByUserIdOnDate(

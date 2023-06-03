@@ -31,5 +31,5 @@ export async function createCheckInController(
     userLongitude: longitude
   })
 
-  return reply.send({ checkIn })
+  return reply.status(201).send({ checkIn })
 }

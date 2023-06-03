@@ -4,7 +4,7 @@ import { makeFetchUserCheckInsHistoryService } from '@/services/factories/make-f
 
 const checkInsHistoryQuerySchema = z.object({
   page: z.coerce.number().min(1).default(1),
-  size: z.coerce.number().nullable()
+  size: z.coerce.number().nullable().optional()
 })
 
 export async function checkInsHistoryController(

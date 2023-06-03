@@ -14,9 +14,9 @@ export async function validateCheckInController(
 
   const validateCheckInService = makeValidateCheckInService()
 
-  const { checkIn } = await validateCheckInService.execute({
+  await validateCheckInService.execute({
     checkInId
   })
 
-  return reply.send({ checkIn })
+  return reply.status(204).send()
 }

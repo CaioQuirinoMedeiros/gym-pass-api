@@ -12,7 +12,7 @@ describe('SearchNearbyGymsController (e2e)', () => {
     await app.close()
   })
 
-  it('should be able to search gyms', async () => {
+  it('should be able to search gyms nearby', async () => {
     const { token } = await createAndAuthenticateUser(app)
 
     const userLatitude = 10
