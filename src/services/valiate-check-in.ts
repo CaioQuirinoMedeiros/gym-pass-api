@@ -36,10 +36,6 @@ export class ValidateCheckInService {
     )
     const MAX_MIN_AFTER_CREATION_TO_VALIDATE = 20
 
-    console.log({
-      minutesAfterCheckInCreation,
-      MAX_MIN_AFTER_CREATION_TO_VALIDATE
-    })
     if (minutesAfterCheckInCreation > MAX_MIN_AFTER_CREATION_TO_VALIDATE) {
       throw new CheckInTooOldToValidadeError()
     }

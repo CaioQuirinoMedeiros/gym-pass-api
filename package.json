@@ -7,8 +7,9 @@
     "dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
-    "test": "vitest run",
-    "test:watch": "vitest",
+    "test": "vitest run services",
+    "test:e2e": "vitest run controllers",
+    "test:watch": "vitest services",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui"
   },
@@ -39,6 +40,7 @@
     "date-fns": "2.30.0",
     "dotenv": "16.0.3",
     "fastify": "4.17.0",
+    "vitest-environment-prisma": "file:prisma/vitest-environment-prisma",
     "zod": "3.21.4"
   }
 }
