@@ -4,11 +4,14 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "test:createPrismaEnv": "npm link ./prisma/vitest-environment-prisma",
+    "test:installPrismaEnv": "npm link vitest-environment-prisma",
     "dev": "tsx watch src/server.ts",
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
     "test": "vitest run services",
     "test:e2e": "vitest run controllers",
+    "pretest:e2e": "run-s test:createPrismaEnv test:installPrismaEnv",
     "test:watch": "vitest services",
     "test:coverage": "vitest run --coverage",
     "test:ui": "vitest --ui"
@@ -25,6 +28,7 @@
     "@vitest/ui": "0.31.1",
     "eslint": "8.41.0",
     "eslint-config-prettier": "8.8.0",
+    "npm-run-all": "4.1.5",
     "prettier": "2.8.8",
     "prisma": "4.14.1",
     "tsup": "6.7.0",
@@ -40,7 +44,6 @@
     "date-fns": "2.30.0",
     "dotenv": "16.0.3",
     "fastify": "4.17.0",
-    "vitest-environment-prisma": "file:prisma/vitest-environment-prisma",
     "zod": "3.21.4"
   }
 }
