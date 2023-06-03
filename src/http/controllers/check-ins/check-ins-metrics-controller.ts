@@ -1,7 +1,7 @@
 import { FastifyReply, FastifyRequest } from 'fastify'
 import { makeGetUserMetricsService } from '@/services/factories/make-get-user-metrics-service'
 
-export async function checkInsMetrics(
+export async function checkInsMetricsController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {

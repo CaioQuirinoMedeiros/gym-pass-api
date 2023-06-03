@@ -15,7 +15,7 @@ const createCheckInParamsSchema = z.object({
   gymId: z.string().uuid()
 })
 
-export async function createCheckIn(
+export async function createCheckInController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {

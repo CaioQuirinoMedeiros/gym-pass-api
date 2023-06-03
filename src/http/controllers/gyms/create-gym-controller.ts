@@ -14,7 +14,7 @@ const createGymBodySchema = z.object({
   })
 })
 
-export async function createGym(request: FastifyRequest, reply: FastifyReply) {
+export async function createGymController(request: FastifyRequest, reply: FastifyReply) {
   const { description, latitude, longitude, phone, title } =
     createGymBodySchema.parse(request.body)
 
@@ -28,5 +28,5 @@ export async function createGym(request: FastifyRequest, reply: FastifyReply) {
     title
   })
 
-  return reply.send({ gym })
+  return reply.status(201).send({ gym })
 }

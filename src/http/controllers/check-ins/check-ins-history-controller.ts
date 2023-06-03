@@ -7,7 +7,7 @@ const checkInsHistoryQuerySchema = z.object({
   size: z.coerce.number().nullable()
 })
 
-export async function checkInsHistory(
+export async function checkInsHistoryController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {

@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { makeAuthenticateService } from '@/services/factories/make-authenticate-service'
 
-export async function authenticate(
+export async function authenticateController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {

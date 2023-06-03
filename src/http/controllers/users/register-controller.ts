@@ -2,7 +2,7 @@ import { FastifyReply, FastifyRequest } from 'fastify'
 import { z } from 'zod'
 import { makeRegisterService } from '@/services/factories/make-register-service'
 
-export async function register(request: FastifyRequest, reply: FastifyReply) {
+export async function registerController(request: FastifyRequest, reply: FastifyReply) {
   const registerBodySchema = z.object({
     name: z.string(),
     email: z.string().email(),

@@ -3,15 +3,15 @@ import { z } from 'zod'
 import { makeFetchNearbyGymsService } from '@/services/factories/make-fetch-nearby-gyms-service'
 
 const searchNearbyGymsQuerySchema = z.object({
-  latitude: z.number().refine((value) => {
+  latitude: z.coerce.number().refine((value) => {
     return Math.abs(value) <= 90
   }),
-  longitude: z.number().refine((value) => {
+  longitude: z.coerce.number().refine((value) => {
     return Math.abs(value) <= 90
   })
 })
 
-export async function searchNearbyGyms(
+export async function searchNearbyGymsController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {

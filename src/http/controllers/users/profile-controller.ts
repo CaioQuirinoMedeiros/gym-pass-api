@@ -1,7 +1,7 @@
 import { makeGetUserProfileService } from '@/services/factories/make-get-user-profile-service'
 import { FastifyReply, FastifyRequest } from 'fastify'
 
-export async function profile(request: FastifyRequest, reply: FastifyReply) {
+export async function profileController(request: FastifyRequest, reply: FastifyReply) {
   await request.jwtVerify()
 
   const getUserProfileService = makeGetUserProfileService()

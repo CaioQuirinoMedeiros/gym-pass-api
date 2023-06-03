@@ -6,7 +6,7 @@ const validateCheckInParamsSchema = z.object({
   checkInId: z.string().uuid()
 })
 
-export async function validateCheckIn(
+export async function validateCheckInController(
   request: FastifyRequest,
   reply: FastifyReply
 ) {
