@@ -1,6 +1,6 @@
 import { FastifyInstance } from 'fastify'
 
-import { verifyJwt } from '@/http/middlewares/verify-jwt'
+import { verifyJwtMiddleware } from '@/http/middlewares/verify-jwt-middleware'
 import { registerController } from './register-controller'
 import { authenticateController } from './authenticate-controller'
 import { profileController } from './profile-controller'
@@ -11,5 +11,5 @@ export async function usersRoutes(app: FastifyInstance) {
   app.post('/sessions', authenticateController)
   app.patch('/token/refresh', refreshTokenController)
 
-  app.get('/me', { onRequest: [verifyJwt] }, profileController)
+  app.get('/me', { onRequest: [verifyJwtMiddleware] }, profileController)
 }

@@ -2,6 +2,7 @@ import { expect, it, describe, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { app } from '@/app'
 import { createAndAuthenticateUser } from '@/utils/test/createAndAuthenticateUser'
+import { prisma } from '@/lib/prisma'
 
 describe('SearchNearbyGymsController (e2e)', () => {
   beforeAll(async () => {
@@ -13,32 +14,29 @@ describe('SearchNearbyGymsController (e2e)', () => {
   })
 
   it('should be able to search gyms nearby', async () => {
-    const { token } = await createAndAuthenticateUser(app)
+    const { token } = await createAndAuthenticateUser(app, 'MEMBER')
 
     const userLatitude = 10
     const userLongitude = 10
 
-    await request(app.server)
-      .post('/gyms/create')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        title: 'JavaScript Gym',
-        description: 'desc',
-        phone: 'phone',
-        latitude: userLatitude + 0.0001,
-        longitude: userLongitude + 0.0001
-      })
-
-    await request(app.server)
-      .post('/gyms/create')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        title: 'TypeScript Gym',
-        description: 'desc',
-        phone: 'phone',
-        latitude: userLatitude + 1,
-        longitude: userLongitude + 1
-      })
+    await prisma.gym.createMany({
+      data: [
+        {
+          title: 'JavaScript Gym',
+          description: 'desc',
+          phone: 'phone',
+          latitude: userLatitude + 0.0001,
+          longitude: userLongitude + 0.0001
+        },
+        {
+          title: 'TypeScript Gym',
+          description: 'desc',
+          phone: 'phone',
+          latitude: userLatitude + 1,
+          longitude: userLongitude + 1
+        }
+      ]
+    })
 
     const response = await request(app.server)
       .get('/gyms/nearby')

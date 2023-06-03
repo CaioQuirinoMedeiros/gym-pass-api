@@ -14,7 +14,7 @@ describe('ValidateCheckInController (e2e)', () => {
   })
 
   it('should be able to validate a  check-in', async () => {
-    const { token, userId } = await createAndAuthenticateUser(app)
+    const { token, userId } = await createAndAuthenticateUser(app, 'ADMIN')
 
     const createGymResponse = await request(app.server)
       .post('/gyms/create')

@@ -2,6 +2,7 @@ import { expect, it, describe, beforeAll, afterAll } from 'vitest'
 import request from 'supertest'
 import { app } from '@/app'
 import { createAndAuthenticateUser } from '@/utils/test/createAndAuthenticateUser'
+import { prisma } from '@/lib/prisma'
 
 describe('SearchGymsController (e2e)', () => {
   beforeAll(async () => {
@@ -13,29 +14,26 @@ describe('SearchGymsController (e2e)', () => {
   })
 
   it('should be able to search gyms', async () => {
-    const { token } = await createAndAuthenticateUser(app)
+    const { token } = await createAndAuthenticateUser(app, 'MEMBER')
 
-    await request(app.server)
-      .post('/gyms/create')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        title: 'JavaScript Gym',
-        description: 'desc',
-        phone: 'phone',
-        latitude: 15,
-        longitude: 25
-      })
-
-    await request(app.server)
-      .post('/gyms/create')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
-        title: 'TypeScript Gym',
-        description: 'desc',
-        phone: 'phone',
-        latitude: 15,
-        longitude: 25
-      })
+    await prisma.gym.createMany({
+      data: [
+        {
+          title: 'JavaScript Gym',
+          description: 'desc',
+          phone: 'phone',
+          latitude: 15,
+          longitude: 25
+        },
+        {
+          title: 'TypeScript Gym',
+          description: 'desc',
+          phone: 'phone',
+          latitude: 15,
+          longitude: 25
+        }
+      ]
+    })
 
     const response = await request(app.server)
       .get('/gyms/search')

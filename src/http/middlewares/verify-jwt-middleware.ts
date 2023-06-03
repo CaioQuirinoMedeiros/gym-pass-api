@@ -1,7 +1,7 @@
 import { AppError } from '@/errors/AppError'
 import { FastifyRequest } from 'fastify'
 
-export async function verifyJwt(request: FastifyRequest) {
+export async function verifyJwtMiddleware(request: FastifyRequest) {
   try {
     await request.jwtVerify()
   } catch {

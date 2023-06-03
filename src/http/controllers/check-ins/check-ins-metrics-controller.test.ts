@@ -14,25 +14,22 @@ describe('CheckInsMetricsController (e2e)', () => {
   })
 
   it('should be able get the count of user check-ins', async () => {
-    const { token, userId } = await createAndAuthenticateUser(app)
+    const { token, userId } = await createAndAuthenticateUser(app, "MEMBER")
 
-    const createGymResponse = await request(app.server)
-      .post('/gyms/create')
-      .set('Authorization', `Bearer ${token}`)
-      .send({
+    const gym = await prisma.gym.create({
+      data: {
         title: 'title',
         description: 'desc',
         phone: 'phone',
         latitude: 15,
         longitude: 25
-      })
-
-    const gymId = createGymResponse.body.gym.id
+      }
+    })
 
     await prisma.checkIn.createMany({
       data: [
-        { gym_id: gymId, user_id: userId },
-        { gym_id: gymId, user_id: userId }
+        { gym_id: gym.id, user_id: userId },
+        { gym_id: gym.id, user_id: userId }
       ]
     })
 
