@@ -17,9 +17,7 @@ function generateDatabaseUrl(schema: string) {
 
 export default <Environment>{
   name: 'prisma',
-  setup(global, options) {
-    console.log(generateDatabaseUrl(randomUUID()))
-
+  setup() {
     const databaseSchema = randomUUID()
     process.env.DATABASE_URL = generateDatabaseUrl(databaseSchema)
     execSync('yarn prisma migrate deploy')
@@ -27,7 +25,9 @@ export default <Environment>{
     return {
       async teardown() {
         console.log('teste fim')
-        prisma.$executeRawUnsafe(`DROP SCHEMA IF EXISTS "${databaseSchema}" CASCADE`)
+        prisma.$executeRawUnsafe(
+          `DROP SCHEMA IF EXISTS "${databaseSchema}" CASCADE`
+        )
         await prisma.$disconnect()
       }
     }

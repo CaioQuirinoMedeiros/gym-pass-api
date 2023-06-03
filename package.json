@@ -10,6 +10,7 @@
     "start": "node build/server.js",
     "build": "tsup src --out-dir build",
     "test": "vitest run services",
+    "test:e2e:watch": "vitest controllers",
     "test:e2e": "vitest run controllers",
     "pretest:e2e": "run-s test:createPrismaEnv test:installPrismaEnv",
     "test:watch": "vitest services",
@@ -22,6 +23,7 @@
   "devDependencies": {
     "@types/bcrypt": "5.0.0",
     "@types/node": "20.2.4",
+    "@types/supertest": "2.0.12",
     "@typescript-eslint/eslint-plugin": "5.59.7",
     "@typescript-eslint/parser": "5.59.7",
     "@vitest/coverage-c8": "0.31.1",
@@ -31,6 +33,7 @@
     "npm-run-all": "4.1.5",
     "prettier": "2.8.8",
     "prisma": "4.14.1",
+    "supertest": "6.3.3",
     "tsup": "6.7.0",
     "tsx": "3.12.7",
     "typescript": "5.0.4",
