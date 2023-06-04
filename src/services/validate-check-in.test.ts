@@ -1,5 +1,5 @@
 import { expect, describe, it, beforeEach, afterEach, vi } from 'vitest'
-import { ValidateCheckInService } from './valiate-check-in'
+import { ValidateCheckInService } from './validate-check-in'
 import { InMemoryCheckInsRepository } from '@/repositories/in-memory/in-memory-check-ins-repository'
 import { ResourceNotFoundError } from '@/errors/ResourceNotFoundError'
 import { CheckInTooOldToValidadeError } from '@/errors/CheckInTooOldToValidadeError'
@@ -36,7 +36,7 @@ describe('ValidateCheckInService', () => {
     }).rejects.toBeInstanceOf(ResourceNotFoundError)
   })
 
-  it.only('should not be able to validate the check-in after 20min of its creation', async () => {
+  it('should not be able to validate the check-in after 20min of its creation', async () => {
     vi.setSystemTime(new Date(2023, 0, 1, 13, 30, 0))
 
     const createdCheckIn = await checkInsRepository.create({
